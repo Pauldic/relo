@@ -1,0 +1,23 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="col-xs-12"><a href="{% url 'core:add-type' %}" class="btn btn-primary pull-right"><i class="glyphicon glyphicon-plus"></i> Add Type</a></div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th> Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in context %}
+                    <tr>
+                        <td> <a href="{% url 'core:type-detail' data.slugify  %}">{{ data }}</a> </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+{% endblock %}

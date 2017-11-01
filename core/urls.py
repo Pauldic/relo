@@ -11,6 +11,11 @@ urlpatterns = [
     url(r'^home/$', views.home),
     url(r'^index/$', views.home),
 
+    url(r'^add-type/$', views.type_add, name="add-type"),
+    url(r'^edit-type/(?P<tid>%s\d{7,13})/$' % settings.SLOG_PREFIX, views.type_add, name="edit-type"),
+    url(r'^type-detail/$', views.type_detail, name="type-detail"),
+    url(r'^type-detail/(?P<rid>%s\d{7,13})/$' % settings.SLOG_PREFIX, views.type_detail, name="type-detail"),
+
     url(r'^add-retailer/$', views.retailer_add, name="add-retailer"),
     url(r'^edit-retailer/(?P<rid>%s\d{7,13})/$' % settings.SLOG_PREFIX, views.retailer_add, name="edit-retailer"),
     url(r'^retailer-detail/$', views.retailer_detail, name="retailer-detail"),

@@ -12,12 +12,47 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from core.forms import RetailerAccountForm, StoreAccountForm
+from core.forms import RetailerAccountForm, StoreAccountForm, TypeForm
 from core.serializers import RetailerSerializer, StoreSerializer, TypeSerializer
 from core.utils import context_data, get_real_id
 from django.shortcuts import render
 
 from core.models import RetailerAccount, StoreAccount, Type
+
+
+def type_add(request, rid=None):
+    if rid:
+        retailer = get_object_or_404(Type, id=get_real_id(rid))
+    else:
+        retailer = None
+
+    if request.method == "POST":
+        form = TypeForm(request.POST, request.FILES, instance=retailer)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse("core:type-detail"))
+    else:
+        form = TypeForm(instance=retailer)
+    return render(request, "core/type_create.html", context={'form': form})
+
+
+def type_detail(request, rid=None):
+    if rid:
+        context = Type.objects.filter(id=get_real_id(rid))
+    else:
+        context = Type.objects.all()
+
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(context, 4)
+    try:
+        context = paginator.page(page)
+    except PageNotAnInteger:
+        context = paginator.page(1)
+    except EmptyPage:
+        context = paginator.page(paginator.num_pages)
+    return render(request, 'core/type_detail.html', context={'context': context})
+
 
 
 def retailer_add(request, rid=None):

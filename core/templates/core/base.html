@@ -25,29 +25,20 @@
 </nav>
 
 <div class="container">
-    <table class="table">
+    <table class="table" id="table-context">
         <thead>
             <tr>
-                <th> total retailer</th>
-                <th> total stores</th>
-                <th> club</th>
-                <th> convenience</th>
-                <th> dollar</th>
-                <th> pet</th>
-                <th> liquor</th>
-                <th> missing logo</th>
+                <th> Retailers</th>
+                <th> Stores</th>
+                <th> Missing Logo</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td> <a href="{% url 'core:retailer-detail' %}" title="View Stores" id="account-count"> {{ accounts }}</a></td>
                 <td> <a href="{% url 'core:store-detail' %}" title="View Stores" id="store-count"> {{ stores }}</a></td>
-                <td id="club-count"> {{ club }}</td>
-                <td id="convenience-count"> {{ convenience }}</td>
-                <td id="dollar-count"> {{ dollar }}</td>
-                <td id="pet-count"> {{ pet }}</td>
-                <td id="liquor-count"> {{ liquor }}</td>
                 <td id="null-logo-count"> {{ null_logo }}</td>
+
             </tr>
         </tbody>
     </table>
@@ -125,22 +116,21 @@
         });
     }
 
-    {% if not accounts %}
-        $(document).ready(function () {
-            processFeed("{% url 'core:api-context' %}", {}, null, false, 'GET', function(d){
-                $("#account-count").html(d['accounts']);
-                $("#store-count").html(d['stores']);
-                $("#club-count").html(d['club']);
-                $("#convenience-count").html(d['convenience']);
-                $("#dollar-count").html(d['dollar']);
-                $("#pet-count").html(d['pet']);
-                $("#liquor-count").html(d['liquor']);
-                $("#null-logo-count").html(d['null_logo']);
-            }, function (d) {
-                console.log("Something went Wrong: ", d.responseText)
+    $(document).ready(function () {
+        processFeed("{% url 'core:api-context' %}", {}, null, false, 'GET', function(d){
+            $.each(Object.keys(d), function (i, v) {
+                if ("context,accounts,stores,null_logo".indexOf(v) == -1) {
+                    $("#table-context thead tr").append("<th>" + v + "</th>")
+                    $("#table-context tbody tr").append("<td>" + d[v] + "</td>")
+                }
             });
+            $("#account-count").html(d["accounts"]);
+            $("#store-count").html(d["stores"]);
+            $("#null-logo-count").html(d["null_logo"]);
+        }, function (d) {
+            console.log("Something went Wrong: ", d.responseText)
         });
-    {% endif %}
+    });
 </script>
 {% block javascript %}
 {% endblock %}

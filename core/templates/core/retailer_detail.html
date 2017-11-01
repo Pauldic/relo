@@ -1,0 +1,71 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <br>
+    <div class="container">
+
+        <div class="col-xs-12"><a href="{% url 'core:add-retailer' %}" class="btn btn-primary pull-right"><i class="glyphicon glyphicon-plus"></i> Add Retailer</a></div>
+
+            <table class="table" id="retailer-table">
+                <thead>
+                    <tr>
+                        <th>Account Name</th>
+                        <th> Banner</th>
+                        <th> Type</th>
+                        <th> Logo</th>
+                        <th> Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data in context %}
+                        <tr>
+                            <td><a href="{% url 'core:retailers-store' data.slugify %}">{{ data.sChain }}</a></td>
+                            <td> {{ data.sBanner_name }}</td>
+                            <td> {{ data.sTypes.all|join:", " }} </td>
+                            <td><img src="{{ data.logo_url }}" width="50"></td>
+                            <td><a href="{% url 'core:edit-retailer' data.slugify %}" title="Click to Edit {{ data.sChain }}"><i class="glyphicon glyphicon-edit"></i></a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+
+            {% if context.has_other_pages %}
+              <ul class="pagination">
+                {% if context.has_previous %}
+                  <li><a href="?page={{ context.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                  <li class="disabled"><span>&laquo;</span></li>
+                {% endif %}
+                {% for i in context.paginator.page_range %}
+                  {% if context.number == i %}
+                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                  {% else %}
+                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                  {% endif %}
+                {% endfor %}
+                {% if context.has_next %}
+                  <li><a href="?page={{ context.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                  <li class="disabled"><span>&raquo;</span></li>
+                {% endif %}
+              </ul>
+            {% endif %}
+    </div>
+{% endblock %}
+
+
+{% block javascript %}
+
+    <script type="text/javascript" src="{% static 'datatables/js/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'datatables/js/dataTables.bootstrap.min.js' %}"></script>
+    <script>
+        {% if not accounts %}
+            $(document).ready(function () {
+{#                $('#retailer-table').DataTable( );#}
+            });
+        {% endif %}
+    </script>
+{% endblock %}

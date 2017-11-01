@@ -1,0 +1,35 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="col-xs-12"><a href="{% url 'core:add-store' %}" class="btn btn-primary pull-right"><i class="glyphicon glyphicon-plus"></i> Add Store</a></div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Store Name</th>
+                    <th>Add One</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Zip</th>
+                    <th>Phone Number</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in context %}
+                    <tr>
+                        <td> <a href="{% url 'core:retailer-detail' data.slugify  %}">{{ data.sChain }}</a> </td>
+                        <td> {{ data.sAddOne }}</td>
+                        <td> {{ data.sCity }}</td>
+                        <td> {{ data.sState }}</td>
+                        <td> {{ data.sZip }}</td>
+                        <td> {{ data.sPhoneOne }}</td>
+                        <td> <a href="{% url 'core:edit-store' data.slugify %}" title="Click to Edit {{ data.sChain }}"><i class="glyphicon glyphicon-edit"></i> </a> </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+
+    <style>
+        .navbar-default {
+            background-color: #0066ff !important;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-default" style="">
+    <div class="container-fluid">
+        <div class="navbar-header">
+
+
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th> total retailer</th>
+                <th> total stores</th>
+                <th> club</th>
+                <th> convenience</th>
+                <th> dollar</th>
+                <th> pet</th>
+                <th> liquor</th>
+                <th> missing logo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td> <a href="{% url 'core:retailer-detail' %}" title="View Stores" id="account-count"> {{ accounts }}</a></td>
+                <td> <a href="{% url 'core:store-detail' %}" title="View Stores" id="store-count"> {{ stores }}</a></td>
+                <td id="club-count"> {{ club }}</td>
+                <td id="convenience-count"> {{ convenience }}</td>
+                <td id="dollar-count"> {{ dollar }}</td>
+                <td id="pet-count"> {{ pet }}</td>
+                <td id="liquor-count"> {{ liquor }}</td>
+                <td id="null-logo-count"> {{ null_logo }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+{% block content %}
+
+{% endblock %}
+
+
+<script type="text/javascript" src="{% static 'jQuery/jquery-2.2.3.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap3-dialog/css/bootstrap-dialog.min.css' %}">
+<script type="text/javascript" src="{% static 'bootstrap3-dialog/js/bootstrap-dialog.min.js' %}"></script>
+<script src="{% static 'js-cookie/js-cookie.js' %}"></script>
+
+<script>
+    function pwd(msg, closable) {
+        closable = closable ? true : false;
+        var pleaseWaitDialog = new BootstrapDialog({
+            message: '<p class="text-center">' + msg + '</p>',
+            closeButton: false,
+            closable: closable,
+            closeByBackdrop: closable,
+            closeByKeyboard: closable,
+        });
+        pleaseWaitDialog.realize();
+        pleaseWaitDialog.getModalFooter().hide();
+        pleaseWaitDialog.getModalHeader().hide();
+        pleaseWaitDialog.open();
+        return pleaseWaitDialog;
+    }
+
+    function csrfSafeMethod(method) {
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    function processFeed(url, data, blocking_msg, asJson, method, successCallback, errorCallback) {
+        var pwDialog = null;
+        $.ajax({
+            type: method,
+            url: url,
+            data: data,
+            dataType: "json",
+            processData: (asJson==null || asJson==false),
+            contentType: (this.processData? 'application/x-www-form-urlencoded; charset=utf-8':'application/json; charset=utf-8'),
+            beforeSend: function (xhr, settings) {
+                console.log(this.data)
+                var csrftoken = Cookies.get('csrftoken');
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+                console.log("sending to: ", this.url)
+                if (blocking_msg != null) {
+                    pwDialog = pwd(blocking_msg);
+                }
+            },
+            success: function (d) {
+                if (typeof successCallback === "function") {
+                    successCallback(d);
+                }
+            },
+            error: function (d) {
+                if (typeof errorCallback === "function") {
+                    errorCallback(d);
+                }
+            },
+            complete: function (d) {
+                if (blocking_msg != null) {
+                    pwDialog.close();
+                }
+            }
+        });
+    }
+
+    {% if not accounts %}
+        $(document).ready(function () {
+            processFeed("{% url 'core:api-context' %}", {}, null, false, 'GET', function(d){
+                $("#account-count").html(d['accounts']);
+                $("#store-count").html(d['stores']);
+                $("#club-count").html(d['club']);
+                $("#convenience-count").html(d['convenience']);
+                $("#dollar-count").html(d['dollar']);
+                $("#pet-count").html(d['pet']);
+                $("#liquor-count").html(d['liquor']);
+                $("#null-logo-count").html(d['null_logo']);
+            }, function (d) {
+                console.log("Something went Wrong: ", d.responseText)
+            });
+        });
+    {% endif %}
+</script>
+{% block javascript %}
+{% endblock %}
+
+
+</body>
+</html>
+

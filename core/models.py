@@ -19,7 +19,7 @@ def rename_and_upload(instance, filename):
         filename = '{}.{}'.format(instance.pk, ext)
     else:
         filename = '{}.{}'.format(uuid4().hex, ext)
-    return os.path.join('', filename)
+    return os.path.join('hell/deep', filename)
 
 
 class RetailerAccount(models.Model):

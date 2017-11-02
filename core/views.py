@@ -54,7 +54,6 @@ def type_detail(request, rid=None):
     return render(request, 'core/type_detail.html', context={'context': context})
 
 
-
 def retailer_add(request, rid=None):
     if rid:
         retailer = get_object_or_404(RetailerAccount, id=get_real_id(rid))

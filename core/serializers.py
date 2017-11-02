@@ -21,7 +21,6 @@ class RetailerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RetailerAccount
-        # fields = ('id', 'sChain', 'sBanner_name', 'sLogo', 'sTypes')
         fields = ('rid', 'name', 'banner_name', 'logo', 'types')
 
 
@@ -38,6 +37,5 @@ class StoreSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StoreAccount
-        # field='__all__'
         fields = ('sid', 'retailer', 'add_one', 'city', 'state', 'zip', 'phone')
 

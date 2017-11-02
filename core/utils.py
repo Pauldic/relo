@@ -18,7 +18,9 @@ def context_data(is_api=False):
     null_logo = context.filter(Q(sLogo=None) | Q(sLogo="")).count()
 
     data = {'context': context, 'accounts': accounts, 'stores': stores, 'null_logo': null_logo, }
+
     types = Type.objects.all()
+
     for t in types:
         data[t.sType]=context.filter(sTypes__sType=t.sType).count()
 

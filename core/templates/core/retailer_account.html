@@ -19,4 +19,12 @@
 {% endblock %}
 
 {% block javascript %}
+    <link rel="stylesheet" type="text/css" href="{% static 'select2/css/select2.min.css' %}">
+    <script type="text/javascript" src="{% static 'select2/js/select2.min.js' %}"></script>
+    <script>
+
+        $(document).ready(function() {
+            $('#id_sTypes').select2({width: '100%'});
+        });
+    </script>
 {% endblock %}

@@ -1,9 +1,27 @@
 {% extends 'core/base.html' %}
+{% load static i18n paginate %}
 
 {% block content %}
 
     <div class="container">
-        <div class="col-xs-12"><a href="{% url 'core:add-type' %}" class="btn btn-primary pull-right"><i class="glyphicon glyphicon-plus"></i> Add Type</a></div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <form action="" method="GET" id="search-form">{% csrf_token %}
+                    <div class="input-group input-group-sm">
+                        <input type="text" class="form-control" id="search-query" name="q" value="{{ q|default:'' }}" placeholder="Search for...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit" id="search-button"><i class="glyphicon glyphicon-search"></i> </button>
+                        </span>
+                    </div><!-- /input-group -->
+                </form>
+            </div>
+
+            <div class="col-sm-6">
+              <a href="{% url 'core:add-type' %}" class="btn btn-primary pull-right"><i class="glyphicon glyphicon-plus"></i> Add Type</a>
+            </div>
+        </div><!-- /.row -->
+
         <table class="table">
             <thead>
                 <tr>
@@ -20,28 +38,20 @@
 
         </table>
 
-        {% if context.has_other_pages %}
-          <ul class="pagination">
-            {% if context.has_previous %}
-              <li><a href="?page={{ context.previous_page_number }}">&laquo;</a></li>
-            {% else %}
-              <li class="disabled"><span>&laquo;</span></li>
-            {% endif %}
-            {% for i in context.paginator.page_range %}
-              {% if context.number == i %}
-                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-              {% else %}
-                <li><a href="?page={{ i }}">{{ i }}</a></li>
-              {% endif %}
-            {% endfor %}
-            {% if context.has_next %}
-              <li><a href="?page={{ context.next_page_number }}">&raquo;</a></li>
-            {% else %}
-              <li class="disabled"><span>&raquo;</span></li>
-            {% endif %}
-          </ul>
-        {% endif %}
+        {{ context|paginate_to:"10,True" }}
+
     </div>
 
 
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+            $("#search-form").submit(function (d) {
+                d.preventDefault();
+                location.href = "./?q="+$("#search-query").val();
+            })
+        });
+    </script>
 {% endblock %}

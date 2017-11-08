@@ -4,7 +4,11 @@ import os
 from django.conf import settings
 from django.core.validators import RegexValidator
 from django.db import models
+from django.db.models.signals import pre_save
 from django.utils.translation import ugettext_lazy as _
+# from storages.backends.s3boto import S3BotoStorage
+
+# from core.signals import rename_image
 
 
 def rename_and_upload(instance, filename):
@@ -25,6 +29,7 @@ def rename_and_upload(instance, filename):
 class RetailerAccount(models.Model):
     sChain = models.CharField(_('Name'), max_length=255, blank=False, null=False)
     sBanner_name = models.CharField(_('Banner Name'), max_length=255, blank=True, null=True, default=None)
+    # sLogo = models.ImageField(_('Logo'), upload_to=rename_and_upload, storage=CustomS3BotoStorage(bucket=settings.AWS_LOCATION), blank=True, null=True, default=None)
     sLogo = models.ImageField(_('Logo'), upload_to=rename_and_upload, blank=True, null=True, default=None)
     sTypes = models.ManyToManyField('Type', verbose_name="Types", default=None, blank=True)
 
@@ -41,6 +46,9 @@ class RetailerAccount(models.Model):
     @property
     def slugify(self):
         return "%s%d" % (settings.SLOG_PREFIX, (settings.SLOG_VALUE + self.id))
+
+
+# pre_save.connect(rename_image, sender=RetailerAccount)
 
 
 class StoreAccount(models.Model):

@@ -2,9 +2,12 @@ import sys
 
 from django.conf import settings
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Q
+from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 
 # Create your views here.
+from django.template import RequestContext
 from django.urls import reverse
 from multiprocessing import get_context
 from rest_framework import status, permissions
@@ -18,6 +21,7 @@ from core.utils import context_data, get_real_id
 from django.shortcuts import render
 
 from core.models import RetailerAccount, StoreAccount, Type
+from lesson import Point, Circle, Square
 
 
 def type_add(request, rid=None):
@@ -42,6 +46,10 @@ def type_detail(request, rid=None):
     else:
         context = Type.objects.all()
 
+    q = request.GET.get('q', None)
+    if q:
+        context = context.filter(Q(sChain__icontains=q))
+
     page = request.GET.get('page', 1)
 
     paginator = Paginator(context, 4)
@@ -51,7 +59,7 @@ def type_detail(request, rid=None):
         context = paginator.page(1)
     except EmptyPage:
         context = paginator.page(paginator.num_pages)
-    return render(request, 'core/type_detail.html', context={'context': context})
+    return render(request, 'core/type_detail.html', context={'context': context, 'q': q})
 
 
 def retailer_add(request, rid=None):
@@ -63,6 +71,7 @@ def retailer_add(request, rid=None):
     if request.method == "POST":
         form = RetailerAccountForm(request.POST, request.FILES, instance=retailer)
         if form.is_valid():
+            form.save(commit=False)
             form.save()
             return redirect(reverse("core:retailer-detail"))
     else:
@@ -76,6 +85,10 @@ def retailer_detail(request, rid=None):
     else:
         context = RetailerAccount.objects.all()
 
+    q = request.GET.get('q', None)
+    if q:
+        context = context.filter(Q(sChain__icontains=q))
+
     page = request.GET.get('page', 1)
 
     paginator = Paginator(context, 4)
@@ -85,10 +98,11 @@ def retailer_detail(request, rid=None):
         context = paginator.page(1)
     except EmptyPage:
         context = paginator.page(paginator.num_pages)
-    return render(request, 'core/retailer_detail.html', context={'context': context})
+    return render(request, 'core/retailer_detail.html', context={'context': context, 'q': q})
 
 
 def home(request):
+
     return render(request, 'core/base.html', context={})
 
 
@@ -158,6 +172,10 @@ def store_detail(request, sid=None):
     else:
         context = StoreAccount.objects.all()
 
+    q = request.GET.get('q', None)
+    if q:
+        context = context.filter(Q(sChain__sChain__icontains=q) | Q(sState__icontains=q) | Q(sCity__icontains=q))
+
     page = request.GET.get('page', 1)
 
     paginator = Paginator(context, 4)
@@ -167,11 +185,28 @@ def store_detail(request, sid=None):
         context = paginator.page(1)
     except EmptyPage:
         context = paginator.page(paginator.num_pages)
-    return render(request, 'core/store_detail.html', context={'context': context})
+
+    return render(request, 'core/store_detail.html', context={'context': context, 'q': q})
 
 
 def retailers_store(request, rid):
-    return render(request, 'core/store_detail.html', context={'context': StoreAccount.objects.filter(sChain__id=get_real_id(rid))})
+    context = StoreAccount.objects.filter(sChain__id=get_real_id(rid))
+
+    q = request.GET.get('q', None)
+    if q:
+        context = context.filter(Q(sChain__sChain__icontains=q) | Q(sState__icontains=q) | Q(sCity__icontains=q))
+
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(context, 4)
+    try:
+        context = paginator.page(page)
+    except PageNotAnInteger:
+        context = paginator.page(1)
+    except EmptyPage:
+        context = paginator.page(paginator.num_pages)
+
+    return render(request, 'core/store_detail.html', context={'context': context, 'q': q})
 
 
 @api_view(['GET', 'POST'])
@@ -259,3 +294,19 @@ def api_type_detail(request, pk, format=None):
 class ContextView(APIView):
     def get(self, request, format=None):
         return Response(context_data(True))
+
+
+def ping(request):
+    return HttpResponse(status=200)
+
+
+# def handler404(request):
+#     response = render_to_response('404.html', {}, context_instance=RequestContext(request))
+#     response.status_code = 404
+#     return response
+#
+#
+# def handler500(request):
+#     response = render_to_response('500.html', {}, context_instance=RequestContext(request))
+#     response.status_code = 500
+#     return response

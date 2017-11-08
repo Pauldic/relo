@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^$', views.home, name="home"),
     url(r'^home/$', views.home),
     url(r'^index/$', views.home),
+    url(r'^ping/$', views.ping),
 
     url(r'^add-type/$', views.type_add, name="add-type"),
     url(r'^edit-type/(?P<tid>%s\d{7,13})/$' % settings.SLOG_PREFIX, views.type_add, name="edit-type"),
@@ -37,7 +38,9 @@ urlpatterns = [
 
     url(r'^api/%s/type/list/$' % settings.API_VERSION, views.api_type_list, name="api-type-list"),
     url(r'^api/%s/type/list/(?P<pk>[0-9]+)/$' % settings.API_VERSION, views.api_type_detail, name="api-type-detail"),
+
 ]
 
 
 urlpatterns = format_suffix_patterns(urlpatterns)
+

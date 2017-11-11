@@ -5,6 +5,9 @@ import sys
 import os
 from shutil import copy2
 
+"""
+Used for one time transfer of files
+"""
 ABS_IMAGE_PATH = "/USE/ABSOLUTE/PATH/TO/LOCATION/OF/THOSE/IMAGES/"
 IMAGE_TYPES = ['.gif', '.png', '.jpg', '.jpeg']
 DB_IMAGE_PATH = "documents/"
@@ -14,8 +17,8 @@ DESTINATION_DIRECTORY = '/ABSOLUTE/PATH/OF/THE/DESTINATION/IMAGES/'
 # Get MySQL Connection
 def get_conn():
     try:
-        # return MySQLdb.connect(host="localhost", user="root", passwd="nd@1331993", db="relorestapi")
-        return MySQLdb.connect(host="localhost", user="root", passwd="nd@1331993", db="freelancer_relo_retailer")
+        # return MySQLdb.connect(host="...", user="...", passwd="....", db="....")
+        return MySQLdb.connect(host="...", user="...", passwd="....", db=".....")
     except MySQLdb.Error as e:
         print(e)
         return None
@@ -24,7 +27,7 @@ def get_conn():
 # Update the table core_retailer_detail.
 def update_record_image_path(conn, db_path, id, filename):
     # print("%s    %s    %s" % (db_path, id, filename))
-    sql = "UPDATE core_retailer_detail SET slogo='%s' WHERE id=%d" %(db_path, id)
+    sql = "UPDATE .... SET slogo='%s' WHERE id=%d" %(db_path, id)
     cursor = conn.cursor()
     counter = cursor.execute(sql)
     cursor.close()

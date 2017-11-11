@@ -73,7 +73,7 @@ class StoreAccount(models.Model):
 
 
 class Type(models.Model):
-    sType = models.CharField(_('Type'), max_length=255)
+    sType = models.CharField(_('Type'), max_length=255, unique=True)
 
     @property
     def slugify(self):
@@ -81,4 +81,5 @@ class Type(models.Model):
 
     def __str__(self):
         return self.sType
+
 

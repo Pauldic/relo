@@ -32,16 +32,16 @@ def context_data(is_api=False):
     return data
 
 
-class CustomMediaS3BotoStorage(S3BotoStorage):
-    def __init__(self, *args, **kwargs):
-        super(CustomMediaS3BotoStorage, self).__init__(*args, **kwargs)
-
-    # def _save(self, *args, **kwargs):
-    #     return super(CustomS3BotoStorage, self)._save(*args, **kwargs)
-    def _save(self, name, content):
-        print(self.name)
-        print(self.content)
-        return super(CustomMediaS3BotoStorage, self)._save(name, content)
+# class CustomMediaS3BotoStorage(S3BotoStorage):
+#     def __init__(self, *args, **kwargs):
+#         super(CustomMediaS3BotoStorage, self).__init__(*args, **kwargs)
+#
+#     # def _save(self, *args, **kwargs):
+#     #     return super(CustomS3BotoStorage, self)._save(*args, **kwargs)
+#     def _save(self, name, content):
+#         print(self.name)
+#         print(self.content)
+#         return super(CustomMediaS3BotoStorage, self)._save(name, content)
 
 
 def copy_object(src_bucket_name,

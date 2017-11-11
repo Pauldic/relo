@@ -17,8 +17,12 @@
 
 <nav class="navbar navbar-default" style="">
     <div class="container-fluid">
-        <div class="navbar-header">
-
+        <div class="navbar-header pull-right">
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'account:logout' %}" class="btn btn-default">Logout</a>
+            {% else %}
+                <a href="{% url 'account:login' %}" class="btn btn-default">Login</a>
+            {% endif %}
 
         </div>
     </div>
@@ -117,7 +121,7 @@
     }
 
     $(document).ready(function () {
-        processFeed("{% url 'core:api-context' %}", {}, null, false, 'GET', function(d){
+        processFeed("{% url 'core:context' %}", {}, null, false, 'GET', function(d){
             $.each(Object.keys(d), function (i, v) {
                 if ("context,accounts,stores,null_logo".indexOf(v) == -1) {
                     $("#table-context thead tr").append("<th>" + v + "</th>")

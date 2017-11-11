@@ -1,0 +1,37 @@
+{% extends "account/base.html" %}
+{% load i18n static crispy_forms_tags humanize %}
+
+
+{% block content %}
+
+    <div class="row">
+        <div class='col-sm-6 col-sm-offset-3'>
+            <h4>Login</h4>
+            <h5><strong>Welcome</strong> login to get started!</h5>
+            <form role="form" id='loginform' action="{% url 'account:login' %}" method="post" >
+                {% if form.errors %}
+                    <div class="col-xs-12">
+                        <span>Incorrect username or password. <a href="{% url 'password_reset' %}" title="Reset My Password">Forgot Password</a> </span>
+                    </div>
+                {% endif %}
+
+                {% if next %}
+                    {% if user.is_authenticated %}
+                        <div class="col-xs-12">You don't have access to this page. To proceed, please login with an account that has access.</div>
+                    {% else %}
+                        <div class="col-xs-12"></div>
+                    {% endif %}
+                {% endif %}
+
+                {% csrf_token %}
+                {{form|crispy}}
+                <input type="hidden" name="next" value="{{ next }}"/>
+
+                <span class="check-left"><input type="checkbox">Remember me</span>
+                <span class="check-right"><a href="#">Forgot password?</a></span>
+                <div class="clearfix"></div>
+                <button class="btn btn-warning btn-block" type="submit">Sign in</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

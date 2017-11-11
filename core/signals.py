@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from shutil import copy2
 
 
+
 #
 # @receiver(post_save, sender=RetailerAccount, dispatch_uid="rename_uploaded_image")
 # def rename_image(sender, instance, created, **kwargs):

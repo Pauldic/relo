@@ -1,13 +1,14 @@
 from django.conf import settings
-from django.conf.urls import url
+from django.conf.urls import url, include
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from core import views
-from core.views import ContextView
+
 
 app_name = "core"
 urlpatterns = [
     url(r'^$', views.home, name="home"),
+    url(r'^$', views.home, name="index"),
     url(r'^home/$', views.home),
     url(r'^index/$', views.home),
     url(r'^ping/$', views.ping),
@@ -28,19 +29,21 @@ urlpatterns = [
     url(r'^retailers-store/(?P<rid>%s\d{7,13})/$' % settings.SLOG_PREFIX, views.retailers_store, name="retailers-store"),
 
 
-    url(r'^api/%s/context/$' % settings.API_VERSION, ContextView.as_view(), name="api-context"),
+    url(r'^context/$', views.get_context, name="context"),
 
-    url(r'^api/%s/retailer/list/$' % settings.API_VERSION, views.api_retailer_list, name="api-retailer-list"),
-    url(r'^api/%s/retailer/list/(?P<pk>[0-9]+)/$' % settings.API_VERSION, views.api_retailer_detail, name="api-retailer-detail"),
-
-    url(r'^api/%s/store/list/$' % settings.API_VERSION, views.api_store_list, name="api-store-list"),
-    url(r'^api/%s/store/list/(?P<pk>[0-9]+)/$' % settings.API_VERSION, views.api_store_detail, name="api-store-detail"),
-
-    url(r'^api/%s/type/list/$' % settings.API_VERSION, views.api_type_list, name="api-type-list"),
-    url(r'^api/%s/type/list/(?P<pk>[0-9]+)/$' % settings.API_VERSION, views.api_type_detail, name="api-type-detail"),
+    # url(r'^api/%s/context/$' % settings.API_VERSION, views.ContextView.as_view(), name="api-context"),
+    #
+    # url(r'^api/%s/retailer/list/$' % settings.API_VERSION, views.api_retailer_list, name="api-retailer-list"),
+    # url(r'^api/%s/retailer/list/(?P<pk>[0-9]+)/$' % settings.API_VERSION, views.api_retailer_detail, name="api-retailer-detail"),
+    #
+    # url(r'^api/%s/store/list/$' % settings.API_VERSION, views.api_store_list, name="api-store-list"),
+    # url(r'^api/%s/store/list/(?P<pk>[0-9]+)/$' % settings.API_VERSION, views.api_store_detail, name="api-store-detail"),
+    #
+    # url(r'^api/%s/type/list/$' % settings.API_VERSION, views.api_type_list, name="api-type-list"),
+    # url(r'^api/%s/type/list/(?P<pk>[0-9]+)/$' % settings.API_VERSION, views.api_type_detail, name="api-type-detail"),
 
 ]
 
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+# urlpatterns = format_suffix_patterns(urlpatterns)
 

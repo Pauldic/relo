@@ -17,12 +17,26 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf.urls.static import static
+from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework.urlpatterns import format_suffix_patterns
+
+from account.view import get_token, Token
+from core_rest.urls import schema_view
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('core.urls')),
+    url(r'^api/', include('core_rest.urls')),
+    # url(r'^v1/api/', include('core_rest.urls', namespace='v1')),
+
+    url(r'^account/', include('account.urls')),
+    # url(r'^api/account/token/$', obtain_auth_token, name='token'),
+    url(r'^api/account/token/$', get_token, name='token'),
+
+    url(r'^schema/$', schema_view),
 ]
 
 # THIS IS A SERIOUS SECURITY LEAK, TO ENSURE YOU DON'T DO IT IN PRODUCTION, USE DEBUG TEST. BUT ENSURE DEBUG IS ALWAYS TURNED OFF IN PRODUCTION
 if settings.DEBUG:
     urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

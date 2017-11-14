@@ -27,16 +27,6 @@ class RetailerAccountViewSet(viewsets.ModelViewSet):
     queryset = RetailerAccount.objects.all()
     serializer_class = RetailerSerializer
 
-
-    @detail_route(methods=['post', 'get'])
-    def upload_image(request, *args, **kwargs):
-        ver = request.request.version
-        try:
-            file = request.data['file']
-        except KeyError:
-            raise ParseError('Request has no resource file attached')
-        # product = Product.objects.create(image=file, ....)
-
     # def create(self, request, pk=None, format=None):
     #     serializer = RetailerSerializer(data=request.data)
     #     if serializer.is_valid():

@@ -32,9 +32,15 @@ SLOG_PREFIX = "US"
 SLOG_VALUE = 1459929
 API_VERSION = "v-1.0"
 USE_RAW = False
+IMAGE_UPLOAD_PATH = ""
 
 TEMPLATE_THEME = "default"
 
+APPEND_SLASH = True
+LOGIN_URL = 'account:login'
+LOGOUT_URL = 'account:logout'
+LOGIN_REDIRECT_URL = 'core:home'
+LOGOUT_REDIRECT_URL = 'core:home'
 
 # Application definition
 
@@ -47,8 +53,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'core.apps.CoreConfig',
+    'core_rest.apps.CoreRestConfig',
+    'account.apps.AccountConfig',
     'rest_framework',
-    'crispy_forms'
+    'rest_framework.authtoken',
+    'crispy_forms',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -74,7 +84,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-            ],
+            ], 'libraries': {
+                'paginate': 'core.templatetags.paginator',
+                }
         },
     },
 ]
@@ -130,8 +142,26 @@ USE_TZ = True
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 10
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.AcceptHeaderVersioning',
+    # 'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
+    'DEFAULT_VERSION': '1.0',
+
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework_xml.renderers.XMLRenderer'
+    ]
 }
 
 # Static files (CSS, JavaScript, Images)
@@ -141,6 +171,22 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-print(STATIC_ROOT)
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "media/"), os.path.join(BASE_DIR, PROJECT_NAME+"/"+TEMPLATE_THEME+"/"), os.path.join(BASE_DIR, PROJECT_NAME+"/assets/")]
+
+
+# AWS_ACCESS_KEY_ID = 'AKIAIT2Z5TDYPX3ARJBA'
+# AWS_SECRET_ACCESS_KEY = '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'
+#
+# AWS_STORAGE_BUCKET_NAME = 'sibtc-assets'
+# AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+#
+# AWS_S3_OBJECT_PARAMETERS = {
+#     'CacheControl': 'max-age=86400',
+# }
+#
+# AWS_LOCATION = 'assets/relo/media/'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+#
+# DEFAULT_FILE_STORAGE = 'core.utils.CustomS3BotoStorage'

@@ -16,6 +16,7 @@ router_v1.register(r'types', viewsets.TypeViewSet, base_name='type')
 router_v1.register(r'logos', viewsets.LogoUploadViewSet, base_name='logo')
 router_v1.register(r'retailers', viewsets.RetailerAccountViewSet, base_name='retailer')
 router_v1.register(r'stores', viewsets.StoreAccountViewSet, base_name='store')
+router_v1.register(r'retailers/(?P<id>[0-9]+)/stores', viewsets.RetailerStoreViewSet, base_name='retailer-store')
 
 
 schema_view = get_schema_view(title='Pastebin API')

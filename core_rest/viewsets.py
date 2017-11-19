@@ -55,6 +55,36 @@ class RetailerAccountViewSet(viewsets.ModelViewSet):
 
 
 class StoreAccountViewSet(viewsets.ModelViewSet):
+    """
+    retrieve:
+    Return the given store.
+
+    list:
+    Return a list of all the existing stores.
+
+    create:
+    Create a new store instance.
+
+    update:
+    Update existing store instance.
+
+    partial_update:
+    Partial update existing store instance.
+
+    destroy:
+    Destroy existing store instance.
+    """
     queryset = StoreAccount.objects.all()
+    serializer_class = RetailerSerializer
+
+
+class RetailerStoreViewSet(viewsets.ModelViewSet):
     serializer_class = StoreSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases for
+        the user as determined by the username portion of the URL.
+        """
+        return StoreAccount.objects.filter(sChain__id=self.kwargs['id'])
 

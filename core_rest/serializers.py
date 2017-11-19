@@ -51,7 +51,6 @@ class RetailerSerializer(serializers.ModelSerializer):
     #     return instance
 
 
-
 class StoreSerializer(serializers.ModelSerializer):
     retailer = RetailerSerializer(source='sChain', many=False)
     # retailer = serializers.PrimaryKeyRelatedField(source='sChain', queryset=RetailerAccount.objects.all())

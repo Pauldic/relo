@@ -1,0 +1,57 @@
+{% extends 'product/base.html' %}
+{% load static i18n paginate %}
+
+{% block content %}
+
+    <br>
+    <div class="container">
+
+        <div class="row">
+            <div class="col-sm-6">
+                <form action="" method="GET" id="search-form">{% csrf_token %}
+                    <div class="input-group input-group-sm">
+                        <input type="text" class="form-control" id="search-query" name="q" value="{{ q|default:'' }}" placeholder="Search for...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit" id="search-button"><i class="glyphicon glyphicon-search"></i> </button>
+                        </span>
+                    </div><!-- /input-group -->
+                </form>
+            </div>
+
+            <div class="col-sm-6">
+                <a href="{% url 'product:brand-add' %}" class="btn btn-primary pull-right"><i class="glyphicon glyphicon-plus"></i> Add Brand</a>
+            </div>
+        </div><!-- /.row -->
+
+            <table class="table" id="brand-table">
+                <thead>
+                    <tr>
+                        <th>Brand Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data in context %}
+                        <tr>
+                            <td><a href="{% url 'product:brand-detail' data.slugify %}">{{ data.name }}</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+
+
+            {{ context|paginate_to:"10,True" }}
+    </div>
+{% endblock %}
+
+
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+            $("#search-form").submit(function (d) {
+                d.preventDefault();
+                location.href = "./?q="+$("#search-query").val();
+            })
+        });
+    </script>
+{% endblock %}

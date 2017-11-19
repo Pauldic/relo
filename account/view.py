@@ -19,7 +19,7 @@ from rest_framework.views import APIView
 #             return redirect('core:home', request)
 #     return redirect(settings.LOGIN_URL)
 
-
+# class RestaurantLocationCreateView(LoginRequiredMixin,CreateView):
 class TokenView(APIView):
     throttle_classes = ()
     permission_classes = ()

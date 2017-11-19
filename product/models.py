@@ -49,12 +49,16 @@ def validate_file(file_obj):
 
 
 class BrandAccount(models.Model):
+    PENDING = 'Pending'; REVIEWED = 'Reviewed'
+    STATUS = (PENDING, _('Pending')), (REVIEWED, _('Reviewed'))
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     file = models.FileField(upload_to=rename_and_upload, validators=[validate_file, validate_file_extension], blank=True, null=True, default=None)
     website = models.URLField(blank=True, null=True, default=None)
     name = models.CharField(max_length=256, blank=True, null=True, default=None)
     email = models.EmailField(max_length=255, blank=True, null=True, default=None)
     title = models.CharField(max_length=255, blank=True, null=True, default=None)
+    status = models.CharField(choices=STATUS, default=PENDING)
+    reviewed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, default=None)
 
     def __str__(self):
         return self.brand.name if self.name is None else "{} ({})".format(self.brand.name, self.name)

@@ -39,7 +39,7 @@ def brand_create(request, bid=None):
             return redirect(reverse("product:brand-detail"))
     else:
         form = BrandForm(instance=brand)
-    return render(request, 'product/create_brand.html', context={'form': form})
+    return render(request, 'product/brand_create.html', context={'form': form})
 
 
 @login_required
@@ -72,12 +72,11 @@ def brand_account_create(request, bid=None):
         brand = get_object_or_404(BrandAccount, id=get_real_id(bid))
     else:
         brand = None
-
-    if request.method == "POST":
-        form = BrandAccountForm(request.POST, instance=brand)
+    if request.method == 'POST':
+        form = BrandAccountForm(request.POST, request.FILES, instance=brand)
         if form.is_valid():
             form.save()
-            return redirect(reverse("product:brand-detail"))
+            return redirect(reverse("product:brand-account-detail"))
     else:
         form = BrandAccountForm(instance=brand)
     return render(request, 'product/brand_account_create.html', context={'form': form})
@@ -109,7 +108,7 @@ def brand_account_detail(request, bid=None):
 
 class BrandAccountCreateView(LoginRequiredMixin, CreateView):
     model = BrandAccount
-    fields = "__all__"
+    fields = ('brand', 'website', 'name', 'email', 'title', 'file')
     template_name = 'product/brand_account_create.html'
 
     def get_context_data(self, **kwargs):

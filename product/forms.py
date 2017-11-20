@@ -12,5 +12,6 @@ class BrandForm(forms.ModelForm):
 class BrandAccountForm(forms.ModelForm):
     class Meta:
         model = BrandAccount
-        fields = '__all__'
+        fields = ('brand', 'title', 'website', 'email', 'name', 'file')
+
 

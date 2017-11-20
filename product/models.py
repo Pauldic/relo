@@ -4,6 +4,7 @@ import os
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
 # Create your models here.
 from django.urls import reverse
@@ -57,7 +58,7 @@ class BrandAccount(models.Model):
     name = models.CharField(max_length=256, blank=True, null=True, default=None)
     email = models.EmailField(max_length=255, blank=True, null=True, default=None)
     title = models.CharField(max_length=255, blank=True, null=True, default=None)
-    status = models.CharField(choices=STATUS, default=PENDING)
+    status = models.CharField(choices=STATUS, default=PENDING, max_length=10)
     reviewed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, default=None)
 
     def __str__(self):

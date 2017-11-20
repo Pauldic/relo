@@ -1,5 +1,5 @@
 {% extends 'product/base.html' %}
-{% load static i18n paginate %}
+{% load static i18n paginate mathfilters %}
 
 {% block content %}
 
@@ -19,20 +19,44 @@
             </div>
 
             <div class="col-sm-6">
-                <a href="{% url 'product:brand-add' %}" class="btn btn-primary pull-right"><i class="glyphicon glyphicon-plus"></i> Add Brand</a>
+                <a href="{% url 'product:brand-account-add' %}" class="btn btn-primary pull-right"><i class="glyphicon glyphicon-plus"></i> Add Brand Account</a>
             </div>
         </div><!-- /.row -->
 
             <table class="table" id="brand-table">
                 <thead>
                     <tr>
-                        <th>Brand Name</th>
+                        <th>Upload ID</th>
+                        <th>Brand</th>
+                        <th>Contact</th>
+                        <th>Title</th>
+                        <th>Email</th>
+                        <th>Website</th>
+                        <th>File Name</th>
+                        <th>Size</th>
+                        <th>Reviewer</th>
+                        <th>Status</th>
+                        <th>Updated</th>
+                        <th>Note</th>
+                        <th>Download</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for data in context %}
                         <tr>
-                            <td><a href="{% url 'product:brand-detail' data.slugify %}">{{ data.name }}</a></td>
+                            <td>-</td>
+                            <td>{{ data.brand.name }}</td>
+                            <td>{{ data.name }}</td>
+                            <td>{{ data.title }}</td>
+                            <td><a href="mailto:{{ data.email }}">{{ data.email }}</a></td>
+                            <td><a href="{{ data.website }}" target="_blank">{{ data.website }}</a></td>
+                            <td style="max-width: 100px; overflow: hidden">{{ data.file.name|default:"-" }}</td>
+                            <td>{{ data.file.size|default:"0"|intdiv:1024 }}kb</td>
+                            <td>{{ data.reviewer|default:"-" }}</td>
+                            <td>{{ data.status }}</td>
+                            <td>{{ data.created }}</td>
+                            <td>{{ data.note }}</td>
+                            <td><a href="{{ data.file.url|default:"javascript:;" }}" download="{{ data.title|default:'' }}" target="_blank"><i class="glyphicon glyphicon-download"></i> </a></td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -18,21 +18,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2.1.0
+      - uses: actions/checkout@v2
           
       - name: SFTP Deploy
         uses: wlixcc/SFTP-Deploy-Action@v1.2.1
         with:
-          username: ubuntu
-          server: ec2-3-22-221-116.us-east-2.compute.amazonaws.com
+          username: 'ubuntu'
+          server: 'ec2-3-22-221-116.us-east-2.compute.amazonaws.com'
           port: 22 # default is 22
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
 
           
           # will put all file under this path
-          local_path: ./* # default is ./*
+          local_path: './*' # default is ./*
           # files will copy to under remote_path
-          remote_path: /var/www/html/relo
+          remote_path: '/var/www/html/relo'
 
           
           # sftp args
